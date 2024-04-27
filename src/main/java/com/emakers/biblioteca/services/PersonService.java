@@ -17,6 +17,10 @@ public class PersonService {
     }
 
     public Person savePerson(Person person) {
+        Optional<Person> existingPerson = personRepository.findByNameAndEmail(person.getName(), person.getEmail());
+        if (existingPerson.isPresent()) {
+            throw new IllegalArgumentException("This person already exists.");
+        }
         return personRepository.save(person);
     }
 

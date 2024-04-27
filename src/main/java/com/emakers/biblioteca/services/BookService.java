@@ -17,6 +17,10 @@ public class BookService {
     }
 
     public Book saveBook(Book book) {
+        Optional<Book> existingBook = bookRepository.findByTitleAndAuthor(book.getTitle(), book.getAuthor());
+        if (existingBook.isPresent()) {
+            throw new IllegalArgumentException("This book already exists.");
+        }
         return bookRepository.save(book);
     }
 
