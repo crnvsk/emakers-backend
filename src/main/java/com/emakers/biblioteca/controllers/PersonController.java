@@ -1,5 +1,6 @@
 package com.emakers.biblioteca.controllers;
 
+import com.emakers.biblioteca.domain.book.Book;
 import com.emakers.biblioteca.domain.person.Person;
 import com.emakers.biblioteca.dtos.PersonRecordDTO;
 import com.emakers.biblioteca.repositories.PersonRepository;
@@ -10,9 +11,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class PersonController {
@@ -25,5 +27,40 @@ public class PersonController {
         var newPerson = new Person();
         BeanUtils.copyProperties(personRecordDTO, newPerson);
         return ResponseEntity.status(HttpStatus.CREATED).body(personRepository.save(newPerson));
+    }
+
+    @GetMapping("/persons")
+    public ResponseEntity<List<Person>> getAllPersons() {
+        return ResponseEntity.status(HttpStatus.OK).body(personRepository.findAll());
+    }
+
+    @GetMapping("/persons/{personId}")
+    public ResponseEntity<Object> getOnePerson(@PathVariable(value ="personId") Integer personId) {
+        Optional<Person> personO = personRepository.findById(personId);
+        if(personO.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Person not found.");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(personO.get());
+    }
+
+    @PutMapping("/persons/{personId}")
+    public ResponseEntity<Object> updatePerson(@PathVariable(value ="personId") Integer personId, @RequestBody @Valid PersonRecordDTO personRecordDTO) {
+        Optional<Person> personO = personRepository.findById(personId);
+        if(personO.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Person not found.");
+        }
+        var person = personO.get();
+        BeanUtils.copyProperties(personRecordDTO, person);
+        return ResponseEntity.status(HttpStatus.OK).body(personRepository.save(person));
+    }
+
+    @DeleteMapping("/persons/{personId}")
+    public ResponseEntity<Object> deletePerson(@PathVariable(value ="personId") Integer personId) {
+        Optional<Person> personO = personRepository.findById(personId);
+        if(personO.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Person not found.");
+        }
+        personRepository.delete(personO.get());
+        return ResponseEntity.status(HttpStatus.OK).body("Person deleted successfully.");
     }
 }
