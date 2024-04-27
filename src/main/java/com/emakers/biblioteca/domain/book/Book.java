@@ -5,9 +5,11 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+
 import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
+
 import java.time.LocalDate;
 
 @Entity

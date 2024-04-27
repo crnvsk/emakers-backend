@@ -6,6 +6,7 @@ import com.emakers.biblioteca.domain.person.Person;
 import com.emakers.biblioteca.repositories.BookRepository;
 import com.emakers.biblioteca.repositories.LoanRepository;
 import com.emakers.biblioteca.repositories.PersonRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,21 +57,33 @@ public class LoanController {
         }
     }
 
-    /*@PostMapping("/return/{bookId}/{personId}")
+    @PostMapping("/return/{bookId}/{personId}")
     public ResponseEntity<String> returnBook(@PathVariable Integer bookId, @PathVariable Integer personId) {
-        Optional<Loan> loanOptional = loanRepository.findByBookIdBookAndPersonIdPerson(bookId, personId);
+        Optional<Book> bookOptional = bookRepository.findById(bookId);
+        List<Loan> loans = loanRepository.findAll();
 
-        if (loanOptional.isPresent()) {
-            Loan loan = loanOptional.get();
-            loanRepository.delete(loan);
+        Loan loan = null;
 
-            Book book = loan.getBook();
+        for (Loan currentLoan : loans) {
+            if (currentLoan.getBook().getBookId().equals(bookId) && currentLoan.getPerson().getPersonId().equals(personId)) {
+                loan = currentLoan;
+                break; // Interrompe a iteração se o empréstimo for encontrado
+            }
+        }
+
+        if (bookOptional.isPresent() && loan != null) {
+            Book book = bookOptional.get();
+
             book.setAmount(book.getAmount() + 1);
             bookRepository.save(book);
 
-            return new ResponseEntity<>("Book returned successfully!", HttpStatus.OK);
+            loanRepository.delete(loan);
+
+            return new ResponseEntity<>("Book successfully returned!", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Loan not found.", HttpStatus.NOT_FOUND);
         }
-    }*/
+    }
+
+
 }
