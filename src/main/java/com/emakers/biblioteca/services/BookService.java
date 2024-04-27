@@ -1,6 +1,7 @@
 package com.emakers.biblioteca.services;
 
 import com.emakers.biblioteca.domain.book.Book;
+import com.emakers.biblioteca.exceptions.DuplicateEntityException;
 import com.emakers.biblioteca.repositories.BookRepository;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ public class BookService {
     public Book saveBook(Book book) {
         Optional<Book> existingBook = bookRepository.findByTitleAndAuthor(book.getTitle(), book.getAuthor());
         if (existingBook.isPresent()) {
-            throw new IllegalArgumentException("This book already exists.");
+            throw new DuplicateEntityException("This book already exists.");
         }
         return bookRepository.save(book);
     }

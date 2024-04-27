@@ -1,6 +1,7 @@
 package com.emakers.biblioteca.services;
 
 import com.emakers.biblioteca.domain.person.Person;
+import com.emakers.biblioteca.exceptions.DuplicateEntityException;
 import com.emakers.biblioteca.repositories.PersonRepository;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ public class PersonService {
     public Person savePerson(Person person) {
         Optional<Person> existingPerson = personRepository.findByNameAndEmail(person.getName(), person.getEmail());
         if (existingPerson.isPresent()) {
-            throw new IllegalArgumentException("This person already exists.");
+            throw new DuplicateEntityException("This person already exists.");
         }
         return personRepository.save(person);
     }
