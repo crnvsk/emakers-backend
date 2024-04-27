@@ -2,7 +2,7 @@ package com.emakers.biblioteca.controllers;
 
 import com.emakers.biblioteca.domain.book.Book;
 import com.emakers.biblioteca.dtos.BookRecordDTO;
-import com.emakers.biblioteca.repositories.BookRepository;
+import com.emakers.biblioteca.services.BookService;
 
 import jakarta.validation.Valid;
 
@@ -22,18 +22,18 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class BookController {
 
     @Autowired
-    BookRepository bookRepository;
+    private BookService bookService;
 
     @PostMapping("/books")
     public ResponseEntity<Book> saveBook(@RequestBody @Valid BookRecordDTO bookRecordDTO) {
-        var newBook = new Book();
-        BeanUtils.copyProperties(bookRecordDTO, newBook);
-        return ResponseEntity.status(HttpStatus.CREATED).body(bookRepository.save(newBook));
+        Book book = new Book();
+        BeanUtils.copyProperties(bookRecordDTO, book);
+        return ResponseEntity.status(HttpStatus.CREATED).body(bookService.saveBook(book));
     }
 
     @GetMapping("/books")
     public ResponseEntity<List<Book>> getAllBooks() {
-        List<Book> booksList = bookRepository.findAll();
+        List<Book> booksList = bookService.getAllBooks();
         if (!booksList.isEmpty()) {
             for (Book book : booksList) {
                 Integer bookId = book.getBookId();
@@ -45,32 +45,32 @@ public class BookController {
 
     @GetMapping("/books/{bookId}")
     public ResponseEntity<Object> getOneBook(@PathVariable(value ="bookId") Integer bookId) {
-        Optional<Book> bookO = bookRepository.findById(bookId);
-        if(bookO.isEmpty()){
+        Optional<Book> book = bookService.getOneBook(bookId);
+        if(book.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Book not found.");
         }
-        bookO.get().add(linkTo(methodOn(BookController.class).getAllBooks()).withRel("Books List"));
-        return ResponseEntity.status(HttpStatus.OK).body(bookO.get());
+        book.get().add(linkTo(methodOn(BookController.class).getAllBooks()).withRel("Books List"));
+        return ResponseEntity.status(HttpStatus.OK).body(book.get());
     }
 
     @PutMapping("/books/{bookId}")
     public ResponseEntity<Object> updateBook(@PathVariable(value ="bookId") Integer bookId, @RequestBody @Valid BookRecordDTO bookRecordDTO) {
-        Optional<Book> book0 = bookRepository.findById(bookId);
-        if(book0.isEmpty()){
+        Optional<Book> existingBookOptional = bookService.getOneBook(bookId);
+        if(existingBookOptional.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Book not found.");
         }
-        var book = book0.get();
-        BeanUtils.copyProperties(bookRecordDTO, book);
-        return ResponseEntity.status(HttpStatus.OK).body(bookRepository.save(book));
+        Book existingBook = existingBookOptional.get();
+        BeanUtils.copyProperties(bookRecordDTO, existingBook);
+        return ResponseEntity.status(HttpStatus.OK).body(bookService.updateBook(existingBook));
     }
 
     @DeleteMapping("/books/{bookId}")
     public ResponseEntity<Object> deleteBook(@PathVariable(value ="bookId") Integer bookId) {
-        Optional<Book> book0 = bookRepository.findById(bookId);
-        if(book0.isEmpty()){
+        Optional<Book> bookToDeleteOptional = bookService.getOneBook(bookId);
+        if(bookToDeleteOptional.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Book not found.");
         }
-        bookRepository.delete(book0.get());
+        bookService.deleteBook(bookToDeleteOptional.get());
         return ResponseEntity.status(HttpStatus.OK).body("Book deleted successfully.");
     }
 }

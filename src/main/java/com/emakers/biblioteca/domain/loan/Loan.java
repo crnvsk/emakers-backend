@@ -3,13 +3,7 @@ package com.emakers.biblioteca.domain.loan;
 import com.emakers.biblioteca.domain.book.Book;
 import com.emakers.biblioteca.domain.person.Person;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 
@@ -23,11 +17,11 @@ public class Loan implements Serializable {
     private Integer loanId;
 
     @ManyToOne
-    @JoinColumn(name = "bookId")
+    @JoinColumn(name = "book_id", nullable = false)
     private Book book;
 
     @ManyToOne
-    @JoinColumn(name = "personId")
+    @JoinColumn(name = "person_id", nullable = false)
     private Person person;
 
     public Integer getLoanId() {

@@ -1,10 +1,6 @@
 package com.emakers.biblioteca.domain.book;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 
 import org.springframework.hateoas.RepresentationModel;
 
@@ -18,11 +14,19 @@ public class Book extends RepresentationModel<Book> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
+    @Column(name = "book_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer bookId;
+
+    @Column(length = 45, nullable = false)
     private String title;
+
+    @Column(length = 45, nullable = false)
     private String author;
+
+    @Column(nullable = false)
     private LocalDate publishDate;
+
     private Integer amount;
 
     public Integer getBookId() {

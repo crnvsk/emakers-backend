@@ -2,7 +2,7 @@ package com.emakers.biblioteca.controllers;
 
 import com.emakers.biblioteca.domain.person.Person;
 import com.emakers.biblioteca.dtos.PersonRecordDTO;
-import com.emakers.biblioteca.repositories.PersonRepository;
+import com.emakers.biblioteca.services.PersonService;
 
 import jakarta.validation.Valid;
 
@@ -22,55 +22,58 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class PersonController {
 
     @Autowired
-    PersonRepository personRepository;
+    private PersonService personService;
 
     @PostMapping("/persons")
     public ResponseEntity<Person> savePerson(@RequestBody @Valid PersonRecordDTO personRecordDTO) {
-        var newPerson = new Person();
-        BeanUtils.copyProperties(personRecordDTO, newPerson);
-        return ResponseEntity.status(HttpStatus.CREATED).body(personRepository.save(newPerson));
+        Person person = new Person();
+        // Convert DTO to Person object (using BeanUtils or custom mapper)
+        BeanUtils.copyProperties(personRecordDTO, person);
+        return ResponseEntity.status(HttpStatus.CREATED).body(personService.savePerson(person));
     }
 
     @GetMapping("/persons")
     public ResponseEntity<List<Person>> getAllPersons() {
-        List<Person> personList = personRepository.findAll();
+        List<Person> personList = personService.getAllPersons();
         if (!personList.isEmpty()) {
             for (Person person : personList) {
                 Integer personId = person.getPersonId();
                 person.add(linkTo(methodOn(PersonController.class).getOnePerson(personId)).withSelfRel());
             }
         }
-        return ResponseEntity.status(HttpStatus.OK).body(personRepository.findAll());
+        return ResponseEntity.status(HttpStatus.OK).body(personList);
     }
 
     @GetMapping("/persons/{personId}")
     public ResponseEntity<Object> getOnePerson(@PathVariable(value ="personId") Integer personId) {
-        Optional<Person> personO = personRepository.findById(personId);
-        if(personO.isEmpty()){
+        Optional<Person> person = personService.getOnePerson(personId);
+        if(person.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Person not found.");
         }
-        personO.get().add(linkTo(methodOn(PersonController.class).getAllPersons()).withRel("Persons List"));
-        return ResponseEntity.status(HttpStatus.OK).body(personO.get());
+        // Add HATEOAS links after retrieving the person
+        person.get().add(linkTo(methodOn(PersonController.class).getAllPersons()).withRel("Persons List"));
+        return ResponseEntity.status(HttpStatus.OK).body(person.get());
     }
 
     @PutMapping("/persons/{personId}")
     public ResponseEntity<Object> updatePerson(@PathVariable(value ="personId") Integer personId, @RequestBody @Valid PersonRecordDTO personRecordDTO) {
-        Optional<Person> personO = personRepository.findById(personId);
-        if(personO.isEmpty()){
+        Optional<Person> existingPersonOptional = personService.getOnePerson(personId);
+        if(existingPersonOptional.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Person not found.");
         }
-        var person = personO.get();
-        BeanUtils.copyProperties(personRecordDTO, person);
-        return ResponseEntity.status(HttpStatus.OK).body(personRepository.save(person));
+        Person existingPerson = existingPersonOptional.get();
+        // Convert DTO to Person object (updating existing person)
+        BeanUtils.copyProperties(personRecordDTO, existingPerson);
+        return ResponseEntity.status(HttpStatus.OK).body(personService.updatePerson(existingPerson));
     }
 
     @DeleteMapping("/persons/{personId}")
     public ResponseEntity<Object> deletePerson(@PathVariable(value ="personId") Integer personId) {
-        Optional<Person> personO = personRepository.findById(personId);
-        if(personO.isEmpty()){
+        Optional<Person> personToDeleteOptional = personService.getOnePerson(personId);
+        if(personToDeleteOptional.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Person not found.");
         }
-        personRepository.delete(personO.get());
+        personService.deletePerson(personToDeleteOptional.get());
         return ResponseEntity.status(HttpStatus.OK).body("Person deleted successfully.");
     }
 }

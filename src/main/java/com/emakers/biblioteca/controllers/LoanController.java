@@ -21,7 +21,7 @@ import java.util.Optional;
 public class LoanController {
 
     @Autowired
-    LoanRepository loanRepository;
+    private LoanRepository loanRepository;
 
     @Autowired
     private BookRepository bookRepository;
@@ -84,6 +84,4 @@ public class LoanController {
             return new ResponseEntity<>("Loan not found.", HttpStatus.NOT_FOUND);
         }
     }
-
-
 }
