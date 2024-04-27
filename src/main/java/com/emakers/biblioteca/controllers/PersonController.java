@@ -27,7 +27,7 @@ public class PersonController {
     @PostMapping("/persons")
     public ResponseEntity<Person> savePerson(@RequestBody @Valid PersonRecordDTO personRecordDTO) {
         Person person = new Person();
-        // Convert DTO to Person object (using BeanUtils or custom mapper)
+
         BeanUtils.copyProperties(personRecordDTO, person);
         return ResponseEntity.status(HttpStatus.CREATED).body(personService.savePerson(person));
     }
@@ -50,7 +50,7 @@ public class PersonController {
         if(person.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Person not found.");
         }
-        // Add HATEOAS links after retrieving the person
+
         person.get().add(linkTo(methodOn(PersonController.class).getAllPersons()).withRel("Persons List"));
         return ResponseEntity.status(HttpStatus.OK).body(person.get());
     }
@@ -62,7 +62,7 @@ public class PersonController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Person not found.");
         }
         Person existingPerson = existingPersonOptional.get();
-        // Convert DTO to Person object (updating existing person)
+
         BeanUtils.copyProperties(personRecordDTO, existingPerson);
         return ResponseEntity.status(HttpStatus.OK).body(personService.updatePerson(existingPerson));
     }

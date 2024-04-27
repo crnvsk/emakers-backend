@@ -67,7 +67,7 @@ public class LoanController {
         for (Loan currentLoan : loans) {
             if (currentLoan.getBook().getBookId().equals(bookId) && currentLoan.getPerson().getPersonId().equals(personId)) {
                 loan = currentLoan;
-                break; // Interrompe a iteração se o empréstimo for encontrado
+                break;
             }
         }
 
