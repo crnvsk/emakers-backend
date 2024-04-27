@@ -5,12 +5,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
 
 @Entity
 @Table(name = "person")
-public class Person implements Serializable {
+public class Person extends RepresentationModel<Person> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id

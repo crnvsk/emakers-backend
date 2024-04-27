@@ -1,6 +1,5 @@
 package com.emakers.biblioteca.controllers;
 
-import com.emakers.biblioteca.domain.book.Book;
 import com.emakers.biblioteca.domain.person.Person;
 import com.emakers.biblioteca.dtos.PersonRecordDTO;
 import com.emakers.biblioteca.repositories.PersonRepository;
@@ -15,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 public class PersonController {
@@ -31,6 +33,13 @@ public class PersonController {
 
     @GetMapping("/persons")
     public ResponseEntity<List<Person>> getAllPersons() {
+        List<Person> personList = personRepository.findAll();
+        if (!personList.isEmpty()) {
+            for (Person person : personList) {
+                Integer personId = person.getPersonId();
+                person.add(linkTo(methodOn(PersonController.class).getOnePerson(personId)).withSelfRel());
+            }
+        }
         return ResponseEntity.status(HttpStatus.OK).body(personRepository.findAll());
     }
 
@@ -40,6 +49,7 @@ public class PersonController {
         if(personO.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Person not found.");
         }
+        personO.get().add(linkTo(methodOn(PersonController.class).getAllPersons()).withRel("Persons List"));
         return ResponseEntity.status(HttpStatus.OK).body(personO.get());
     }
 

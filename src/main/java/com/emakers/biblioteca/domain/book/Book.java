@@ -5,13 +5,14 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "book")
-public class Book implements Serializable {
+public class Book extends RepresentationModel<Book> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id

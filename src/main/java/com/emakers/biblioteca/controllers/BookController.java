@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
 public class BookController {
 
@@ -28,16 +31,24 @@ public class BookController {
 
     @GetMapping("/books")
     public ResponseEntity<List<Book>> getAllBooks() {
-        return ResponseEntity.status(HttpStatus.OK).body(bookRepository.findAll());
+        List<Book> booksList = bookRepository.findAll();
+        if (!booksList.isEmpty()) {
+            for (Book book : booksList) {
+                Integer bookId = book.getBookId();
+                book.add(linkTo(methodOn(BookController.class).getOneBook(bookId)).withSelfRel());
+            }
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(booksList);
     }
 
     @GetMapping("/books/{bookId}")
     public ResponseEntity<Object> getOneBook(@PathVariable(value ="bookId") Integer bookId) {
-        Optional<Book> personO = bookRepository.findById(bookId);
-        if(personO.isEmpty()){
+        Optional<Book> bookO = bookRepository.findById(bookId);
+        if(bookO.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Book not found.");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(personO.get());
+        bookO.get().add(linkTo(methodOn(BookController.class).getAllBooks()).withRel("Books List"));
+        return ResponseEntity.status(HttpStatus.OK).body(bookO.get());
     }
 
     @PutMapping("/books/{bookId}")
