@@ -29,6 +29,8 @@ public class Book extends RepresentationModel<Book> implements Serializable {
 
     private Integer amount;
 
+    private Boolean isLoaned;
+
     public Integer getBookId() {
         return bookId;
     }
@@ -67,5 +69,13 @@ public class Book extends RepresentationModel<Book> implements Serializable {
 
     public void setAmount(Integer amount) {
         this.amount = amount;
+    }
+
+    public Boolean getIsLoaned() {
+        return isLoaned;
+    }
+
+    public void setIsLoaned(Boolean loaned) {
+        isLoaned = loaned;
     }
 }

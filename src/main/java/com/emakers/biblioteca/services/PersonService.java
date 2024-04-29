@@ -1,7 +1,9 @@
 package com.emakers.biblioteca.services;
 
 import com.emakers.biblioteca.domain.person.Person;
+import com.emakers.biblioteca.exceptions.BookAlreadyLoanedException;
 import com.emakers.biblioteca.exceptions.DuplicateEntityException;
+import com.emakers.biblioteca.exceptions.PersonHasBooksBorrowedException;
 import com.emakers.biblioteca.repositories.PersonRepository;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,7 @@ public class PersonService {
         if (existingPerson.isPresent()) {
             throw new DuplicateEntityException("This person already exists.");
         }
+        person.setIsBorrowing(false);
         return personRepository.save(person);
     }
 
@@ -38,6 +41,10 @@ public class PersonService {
     }
 
     public void deletePerson(Person person) {
+        boolean personO = person.getIsBorrowing();
+        if(personO){
+            throw new PersonHasBooksBorrowedException("Cannot delete person because it has books borrowed.");
+        }
         personRepository.delete(person);
     }
 }

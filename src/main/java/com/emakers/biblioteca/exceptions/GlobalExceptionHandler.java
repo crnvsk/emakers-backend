@@ -13,8 +13,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
-    @ExceptionHandler(BookIsBorrowedException.class)
-    public ResponseEntity<Object> bookIsBorrowedException(BookIsBorrowedException ex) {
+    @ExceptionHandler(BookAlreadyLoanedException.class)
+    public ResponseEntity<Object> handleBookAlreadyLoanedException(BookAlreadyLoanedException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(PersonHasBooksBorrowedException.class)
+    public ResponseEntity<Object> handlePersonHasBooksBorrowedException(PersonHasBooksBorrowedException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 }

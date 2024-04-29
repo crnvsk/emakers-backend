@@ -1,6 +1,7 @@
 package com.emakers.biblioteca.services;
 
 import com.emakers.biblioteca.domain.book.Book;
+import com.emakers.biblioteca.exceptions.BookAlreadyLoanedException;
 import com.emakers.biblioteca.exceptions.DuplicateEntityException;
 import com.emakers.biblioteca.repositories.BookRepository;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ public class BookService {
         if (existingBook.isPresent()) {
             throw new DuplicateEntityException("This book already exists.");
         }
+        book.setIsLoaned(false);
         return bookRepository.save(book);
     }
 
@@ -37,7 +39,15 @@ public class BookService {
         return bookRepository.save(book);
     }
 
+    public Integer getTotalAmount(Book book){
+        return book.getAmount();
+    }
+
     public void deleteBook(Book book) {
+        boolean bookO = book.getIsLoaned();
+        if(bookO){
+            throw new BookAlreadyLoanedException("Cannot delete book because it is currently loaned.");
+        }
         bookRepository.delete(book);
     }
 }

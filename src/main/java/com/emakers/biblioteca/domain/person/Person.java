@@ -28,6 +28,8 @@ public class Person extends RepresentationModel<Person> implements Serializable 
     @Column(length = 45, nullable = false)
     private String password;
 
+    private Boolean isBorrowing;
+
     public Integer getPersonId() {
         return personId;
     }
@@ -66,5 +68,13 @@ public class Person extends RepresentationModel<Person> implements Serializable 
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Boolean getIsBorrowing() {
+        return isBorrowing;
+    }
+
+    public void setIsBorrowing(Boolean borrowing) {
+        isBorrowing = borrowing;
     }
 }
