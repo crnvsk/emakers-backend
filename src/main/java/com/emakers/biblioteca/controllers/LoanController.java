@@ -6,14 +6,14 @@ import com.emakers.biblioteca.domain.loan.Loan;
 import com.emakers.biblioteca.services.BookService;
 import com.emakers.biblioteca.services.PersonService;
 import com.emakers.biblioteca.services.LoanService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @RestController
+@RequestMapping(value = "/api")
 public class LoanController {
 
     @Autowired

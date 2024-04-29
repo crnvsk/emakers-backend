@@ -36,12 +36,13 @@ public class BookService {
     }
 
     public Book updateBook(Book book) {
+        Optional<Book> existingBook = bookRepository.findByTitleAndAuthor(book.getTitle(), book.getAuthor());
+        if (existingBook.isPresent() && !existingBook.get().getBookId().equals(book.getBookId())) {
+            throw new DuplicateEntityException("Another book with the same title and author already exists.");
+        }
         return bookRepository.save(book);
     }
 
-    public Integer getTotalAmount(Book book){
-        return book.getAmount();
-    }
 
     public void deleteBook(Book book) {
         boolean bookO = book.getIsLoaned();
@@ -49,5 +50,9 @@ public class BookService {
             throw new BookAlreadyLoanedException("Cannot delete book because it is currently loaned.");
         }
         bookRepository.delete(book);
+    }
+
+    public Optional<Book> getBookByTitleAndAuthor(String title, String author) {
+        return bookRepository.findByTitleAndAuthor(title, author);
     }
 }

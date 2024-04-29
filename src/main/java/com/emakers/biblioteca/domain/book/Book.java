@@ -27,6 +27,7 @@ public class Book extends RepresentationModel<Book> implements Serializable {
     @Column(nullable = false)
     private LocalDate publishDate;
 
+    @Column(nullable = false)
     private Integer amount;
 
     private Boolean isLoaned;

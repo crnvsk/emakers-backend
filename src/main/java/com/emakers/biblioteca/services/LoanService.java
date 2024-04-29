@@ -23,7 +23,7 @@ public class LoanService {
         this.personService = personService;
     }
 
-    public Loan saveLoan(Loan loan) {
+    public void saveLoan(Loan loan) {
         Book book = loan.getBook();
         book.setIsLoaned(true);
         bookService.updateBook(book);
@@ -32,7 +32,7 @@ public class LoanService {
         person.setIsBorrowing(true);
         personService.updatePerson(person);
 
-        return loanRepository.save(loan);
+        loanRepository.save(loan);
     }
 
     public List<Loan> getAllLoans(){

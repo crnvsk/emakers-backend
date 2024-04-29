@@ -19,6 +19,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
+@RequestMapping(value = "/api")
 public class PersonController {
 
     @Autowired
@@ -40,6 +41,8 @@ public class PersonController {
                 Integer personId = person.getPersonId();
                 person.add(linkTo(methodOn(PersonController.class).getOnePerson(personId)).withSelfRel());
             }
+        }else{
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.status(HttpStatus.OK).body(personList);
     }
