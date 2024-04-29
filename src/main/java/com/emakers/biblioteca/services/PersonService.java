@@ -1,10 +1,10 @@
 package com.emakers.biblioteca.services;
 
 import com.emakers.biblioteca.domain.person.Person;
-import com.emakers.biblioteca.exceptions.BookAlreadyLoanedException;
 import com.emakers.biblioteca.exceptions.DuplicateEntityException;
 import com.emakers.biblioteca.exceptions.PersonHasBooksBorrowedException;
 import com.emakers.biblioteca.repositories.PersonRepository;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -4,6 +4,7 @@ import com.emakers.biblioteca.domain.book.Book;
 import com.emakers.biblioteca.exceptions.BookAlreadyLoanedException;
 import com.emakers.biblioteca.exceptions.DuplicateEntityException;
 import com.emakers.biblioteca.repositories.BookRepository;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
