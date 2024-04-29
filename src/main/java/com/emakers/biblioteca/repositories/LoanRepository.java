@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface LoanRepository extends JpaRepository<Loan, Integer> {
     Loan findLoanByBookAndPerson(Book book, Person person);
+
     boolean existsByBook(Book book);
+
     boolean existsByPerson(Person person);
 }
