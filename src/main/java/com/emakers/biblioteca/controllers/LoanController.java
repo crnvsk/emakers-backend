@@ -7,13 +7,19 @@ import com.emakers.biblioteca.services.BookService;
 import com.emakers.biblioteca.services.PersonService;
 import com.emakers.biblioteca.services.LoanService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/api")
+@Tag(name = "loan-rest-api")
 public class LoanController {
 
     @Autowired
@@ -25,7 +31,17 @@ public class LoanController {
     @Autowired
     private LoanService loanService;
 
-    @PostMapping("/loan/{bookId}/{personId}")
+    @Operation(summary = "Lend a book to someone", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Book loaned successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid or missing parameters/information"),
+            @ApiResponse(responseCode = "401", description = "Access denied due to invalid credentials"),
+            @ApiResponse(responseCode = "403", description = "You don't have permission to access this resource"),
+            @ApiResponse(responseCode = "404", description = "Book or person not found"),
+            @ApiResponse(responseCode = "409", description = "This loan already exists"),
+            @ApiResponse(responseCode = "500", description = "Internal Server error")
+    })
+    @PostMapping(value = "/loan/{bookId}/{personId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> loanBook(@PathVariable Integer bookId, @PathVariable Integer personId) {
         Book book = bookService.getOneBook(bookId).orElse(null);
         Person person = personService.getOnePerson(personId).orElse(null);
@@ -54,8 +70,16 @@ public class LoanController {
         return ResponseEntity.status(HttpStatus.OK).body("Book successfully borrowed!");
     }
 
-
-    @PostMapping("/return/{bookId}/{personId}")
+    @Operation(summary = "Return a book to the library", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Book returned successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid or missing parameters/information"),
+            @ApiResponse(responseCode = "401", description = "Access denied due to invalid credentials"),
+            @ApiResponse(responseCode = "403", description = "You don't have permission to access this resource"),
+            @ApiResponse(responseCode = "404", description = "Book or person not found"),
+            @ApiResponse(responseCode = "500", description = "Internal Server error")
+    })
+    @PostMapping(value = "/return/{bookId}/{personId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> returnBook(@PathVariable Integer bookId, @PathVariable Integer personId) {
         Book book = bookService.getOneBook(bookId).orElse(null);
         Person person = personService.getOnePerson(personId).orElse(null);

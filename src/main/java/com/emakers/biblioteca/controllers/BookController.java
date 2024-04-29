@@ -26,7 +26,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping(value = "/api")
-@Tag(name = "library-rest-api")
+@Tag(name = "book-rest-api")
 public class BookController {
 
     @Autowired
@@ -38,7 +38,7 @@ public class BookController {
             @ApiResponse(responseCode = "400", description = "Invalid or missing parameters/information"),
             @ApiResponse(responseCode = "401", description = "Access denied due to invalid credentials"),
             @ApiResponse(responseCode = "403", description = "You don't have permission to access this resource"),
-            @ApiResponse(responseCode = "409", description = "Book already exists"),
+            @ApiResponse(responseCode = "409", description = "This book already exists"),
             @ApiResponse(responseCode = "500", description = "Internal Server error")
     })
     @PostMapping(value = "/books", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -98,7 +98,7 @@ public class BookController {
             @ApiResponse(responseCode = "400", description = "Invalid or missing parameters/information"),
             @ApiResponse(responseCode = "401", description = "Access denied due to invalid credentials"),
             @ApiResponse(responseCode = "403", description = "You don't have permission to access this resource"),
-            @ApiResponse(responseCode = "409", description = "Book already exists"),
+            @ApiResponse(responseCode = "409", description = "This book already exists"),
             @ApiResponse(responseCode = "500", description = "Internal Server error")
     })
     @PutMapping(value = "/books/{bookId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
