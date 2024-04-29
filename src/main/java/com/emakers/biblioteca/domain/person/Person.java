@@ -13,7 +13,7 @@ public class Person extends RepresentationModel<Person> implements Serializable 
 
     @Id
     @Column(name = "person_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer personId;
 
     @Column(length = 80, nullable = false)
@@ -25,7 +25,7 @@ public class Person extends RepresentationModel<Person> implements Serializable 
     @Column(length = 45, nullable = false)
     private String email;
 
-    @Column(length = 45, nullable = false)
+    @Column(nullable = false)
     private String password;
 
     private Boolean isBorrowing;

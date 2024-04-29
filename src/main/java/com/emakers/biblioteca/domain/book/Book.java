@@ -15,7 +15,7 @@ public class Book extends RepresentationModel<Book> implements Serializable {
 
     @Id
     @Column(name = "book_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer bookId;
 
     @Column(length = 45, nullable = false)

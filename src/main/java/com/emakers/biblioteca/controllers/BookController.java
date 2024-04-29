@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,7 +42,7 @@ public class BookController {
             @ApiResponse(responseCode = "409", description = "This book already exists"),
             @ApiResponse(responseCode = "500", description = "Internal Server error")
     })
-    @PostMapping(value = "/books", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/books/saveBook", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Book> saveBook(@RequestBody @Valid BookRecordDTO bookRecordDTO) {
         Book book = new Book();
         BeanUtils.copyProperties(bookRecordDTO, book);
@@ -58,7 +59,7 @@ public class BookController {
             @ApiResponse(responseCode = "422", description = "Invalid request data"),
             @ApiResponse(responseCode = "500", description = "Internal Server error")
     })
-    @GetMapping(value = "/books", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/books/getAllBooks", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Book>> getAllBooks() {
         List<Book> booksList = bookService.getAllBooks();
         if (!booksList.isEmpty()) {
@@ -82,7 +83,7 @@ public class BookController {
             @ApiResponse(responseCode = "422", description = "Invalid request data"),
             @ApiResponse(responseCode = "500", description = "Internal Server error")
     })
-    @GetMapping(value = "/books/{bookId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/books/getOneBook/{bookId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getOneBook(@PathVariable(value ="bookId") Integer bookId) {
         Optional<Book> book = bookService.getOneBook(bookId);
         if(book.isEmpty()){
@@ -101,7 +102,7 @@ public class BookController {
             @ApiResponse(responseCode = "409", description = "This book already exists"),
             @ApiResponse(responseCode = "500", description = "Internal Server error")
     })
-    @PutMapping(value = "/books/{bookId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/books/updateBook/{bookId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> updateBook(@PathVariable(value ="bookId") Integer bookId, @RequestBody @Valid BookRecordDTO bookRecordDTO) {
         Optional<Book> existingBookOptional = bookService.getOneBook(bookId);
         if(existingBookOptional.isEmpty()){
@@ -127,7 +128,7 @@ public class BookController {
             @ApiResponse(responseCode = "404", description = "Book not found"),
             @ApiResponse(responseCode = "500", description = "Internal Server error")
     })
-    @DeleteMapping(value = "/books/{bookId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/books/deleteBook/{bookId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteBook(@PathVariable(value ="bookId") Integer bookId) {
         Optional<Book> bookToDeleteOptional = bookService.getOneBook(bookId);
         if(bookToDeleteOptional.isEmpty()){

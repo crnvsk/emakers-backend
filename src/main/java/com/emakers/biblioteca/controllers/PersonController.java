@@ -41,7 +41,7 @@ public class PersonController {
             @ApiResponse(responseCode = "409", description = "This person already exists"),
             @ApiResponse(responseCode = "500", description = "Internal Server error")
     })
-    @PostMapping(value = "/persons", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/persons/savePerson", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Person> savePerson(@RequestBody @Valid PersonRecordDTO personRecordDTO) {
         Person person = new Person();
         BeanUtils.copyProperties(personRecordDTO, person);
@@ -58,7 +58,7 @@ public class PersonController {
             @ApiResponse(responseCode = "422", description = "Invalid request data"),
             @ApiResponse(responseCode = "500", description = "Internal Server error")
     })
-    @GetMapping(value = "/persons", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/persons/getAllPersons", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Person>> getAllPersons() {
         List<Person> personList = personService.getAllPersons();
         if (!personList.isEmpty()) {
@@ -82,7 +82,7 @@ public class PersonController {
             @ApiResponse(responseCode = "422", description = "Invalid request data"),
             @ApiResponse(responseCode = "500", description = "Internal Server error")
     })
-    @GetMapping(value = "/persons/{personId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/persons/getOnePerson/{personId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getOnePerson(@PathVariable(value ="personId") Integer personId) {
         Optional<Person> person = personService.getOnePerson(personId);
         if(person.isEmpty()){
@@ -102,7 +102,7 @@ public class PersonController {
             @ApiResponse(responseCode = "409", description = "This person already exists"),
             @ApiResponse(responseCode = "500", description = "Internal Server error")
     })
-    @PutMapping(value = "/persons/{personId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/persons/updatePerson/{personId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> updatePerson(@PathVariable(value ="personId") Integer personId, @RequestBody @Valid PersonRecordDTO personRecordDTO) {
         Optional<Person> existingPersonOptional = personService.getOnePerson(personId);
         if(existingPersonOptional.isEmpty()){
@@ -123,7 +123,7 @@ public class PersonController {
             @ApiResponse(responseCode = "404", description = "Person not found"),
             @ApiResponse(responseCode = "500", description = "Internal Server error")
     })
-    @DeleteMapping(value = "/persons/{personId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/persons/deletePerson/{personId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deletePerson(@PathVariable(value ="personId") Integer personId) {
         Optional<Person> personToDeleteOptional = personService.getOnePerson(personId);
         if(personToDeleteOptional.isEmpty()){
