@@ -5,7 +5,7 @@ import com.emakers.biblioteca.exceptions.DuplicateEntityException;
 import com.emakers.biblioteca.exceptions.PersonHasBooksBorrowedException;
 import com.emakers.biblioteca.repositories.PersonRepository;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,7 +28,7 @@ public class PersonService {
             throw new DuplicateEntityException("This person already exists.");
         }
         person.setIsBorrowing(false);
-        person.setPassword(new BCryptPasswordEncoder().encode(person.getPassword()));
+        //person.setPassword(new BCryptPasswordEncoder().encode(person.getPassword()));
 
         if(person.getIsAdmin()){
             Set<String> roles = new HashSet<>();
