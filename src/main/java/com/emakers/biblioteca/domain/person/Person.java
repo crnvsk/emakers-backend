@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "person")
@@ -29,6 +31,13 @@ public class Person extends RepresentationModel<Person> implements Serializable 
     private String password;
 
     private Boolean isBorrowing;
+
+    private Boolean isAdmin;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "person_roles", joinColumns = @JoinColumn(name = "person_id"))
+    @Column(name = "role")
+    private Set<String> roles = new HashSet<>();
 
     public Integer getPersonId() {
         return personId;
@@ -76,5 +85,21 @@ public class Person extends RepresentationModel<Person> implements Serializable 
 
     public void setIsBorrowing(Boolean borrowing) {
         isBorrowing = borrowing;
+    }
+
+    public Set<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<String> roles) {
+        this.roles = roles;
+    }
+
+    public Boolean getIsAdmin() {
+        return isAdmin;
+    }
+
+    public void setIsAdmin(Boolean admin) {
+        isAdmin = admin;
     }
 }
