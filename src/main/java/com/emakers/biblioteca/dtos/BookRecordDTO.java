@@ -5,5 +5,6 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
-public record BookRecordDTO(@NotBlank String title, @NotBlank String author, @NotNull LocalDate publishDate, Integer amount){
+public record BookRecordDTO(@NotBlank String title, @NotBlank String author, @NotNull LocalDate publishDate,
+        Integer amount) {
 }

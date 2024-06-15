@@ -66,7 +66,7 @@ public class PersonController {
                 Integer personId = person.getPersonId();
                 person.add(linkTo(methodOn(PersonController.class).getOnePerson(personId)).withSelfRel());
             }
-        }else{
+        } else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.status(HttpStatus.OK).body(personList);
@@ -83,9 +83,9 @@ public class PersonController {
             @ApiResponse(responseCode = "500", description = "Internal Server error")
     })
     @GetMapping(value = "/persons/getOnePerson/{personId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getOnePerson(@PathVariable(value ="personId") Integer personId) {
+    public ResponseEntity<Object> getOnePerson(@PathVariable(value = "personId") Integer personId) {
         Optional<Person> person = personService.getOnePerson(personId);
-        if(person.isEmpty()){
+        if (person.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Person not found.");
         }
 
@@ -103,9 +103,10 @@ public class PersonController {
             @ApiResponse(responseCode = "500", description = "Internal Server error")
     })
     @PutMapping(value = "/persons/updatePerson/{personId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> updatePerson(@PathVariable(value ="personId") Integer personId, @RequestBody @Valid PersonRecordDTO personRecordDTO) {
+    public ResponseEntity<Object> updatePerson(@PathVariable(value = "personId") Integer personId,
+            @RequestBody @Valid PersonRecordDTO personRecordDTO) {
         Optional<Person> existingPersonOptional = personService.getOnePerson(personId);
-        if(existingPersonOptional.isEmpty()){
+        if (existingPersonOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Person not found.");
         }
         Person existingPerson = existingPersonOptional.get();
@@ -124,9 +125,9 @@ public class PersonController {
             @ApiResponse(responseCode = "500", description = "Internal Server error")
     })
     @DeleteMapping(value = "/persons/deletePerson/{personId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> deletePerson(@PathVariable(value ="personId") Integer personId) {
+    public ResponseEntity<Object> deletePerson(@PathVariable(value = "personId") Integer personId) {
         Optional<Person> personToDeleteOptional = personService.getOnePerson(personId);
-        if(personToDeleteOptional.isEmpty()){
+        if (personToDeleteOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Person not found.");
         }
         personService.deletePerson(personToDeleteOptional.get());

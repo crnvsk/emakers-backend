@@ -17,7 +17,7 @@ public class LoanService {
     private final BookService bookService;
     private final PersonService personService;
 
-    public LoanService(LoanRepository loanRepository ,BookService bookService, PersonService personService) {
+    public LoanService(LoanRepository loanRepository, BookService bookService, PersonService personService) {
         this.loanRepository = loanRepository;
         this.bookService = bookService;
         this.personService = personService;
@@ -35,7 +35,7 @@ public class LoanService {
         loanRepository.save(loan);
     }
 
-    public List<Loan> getAllLoans(){
+    public List<Loan> getAllLoans() {
         return loanRepository.findAll();
     }
 

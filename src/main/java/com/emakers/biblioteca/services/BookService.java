@@ -44,10 +44,9 @@ public class BookService {
         return bookRepository.save(book);
     }
 
-
     public void deleteBook(Book book) {
         boolean bookO = book.getIsLoaned();
-        if(bookO){
+        if (bookO) {
             throw new BookAlreadyLoanedException("Cannot delete book because it is currently loaned.");
         }
         bookRepository.delete(book);

@@ -66,7 +66,7 @@ public class BookController {
                 Integer bookId = book.getBookId();
                 book.add(linkTo(methodOn(BookController.class).getOneBook(bookId)).withSelfRel());
             }
-        }else{
+        } else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.status(HttpStatus.OK).body(booksList);
@@ -83,9 +83,9 @@ public class BookController {
             @ApiResponse(responseCode = "500", description = "Internal Server error")
     })
     @GetMapping(value = "/books/getOneBook/{bookId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getOneBook(@PathVariable(value ="bookId") Integer bookId) {
+    public ResponseEntity<Object> getOneBook(@PathVariable(value = "bookId") Integer bookId) {
         Optional<Book> book = bookService.getOneBook(bookId);
-        if(book.isEmpty()){
+        if (book.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Book not found.");
         }
         book.get().add(linkTo(methodOn(BookController.class).getAllBooks()).withRel("Books List"));
@@ -102,17 +102,20 @@ public class BookController {
             @ApiResponse(responseCode = "500", description = "Internal Server error")
     })
     @PutMapping(value = "/books/updateBook/{bookId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> updateBook(@PathVariable(value ="bookId") Integer bookId, @RequestBody @Valid BookRecordDTO bookRecordDTO) {
+    public ResponseEntity<Object> updateBook(@PathVariable(value = "bookId") Integer bookId,
+            @RequestBody @Valid BookRecordDTO bookRecordDTO) {
         Optional<Book> existingBookOptional = bookService.getOneBook(bookId);
-        if(existingBookOptional.isEmpty()){
+        if (existingBookOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Book not found.");
         }
 
         Book existingBook = existingBookOptional.get();
 
-        Optional<Book> anotherBookOptional = bookService.getBookByTitleAndAuthor(bookRecordDTO.title(), bookRecordDTO.author());
+        Optional<Book> anotherBookOptional = bookService.getBookByTitleAndAuthor(bookRecordDTO.title(),
+                bookRecordDTO.author());
         if (anotherBookOptional.isPresent() && !anotherBookOptional.get().getBookId().equals(bookId)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Another book with the same title and author already exists.");
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Another book with the same title and author already exists.");
         }
         BeanUtils.copyProperties(bookRecordDTO, existingBook);
         return ResponseEntity.status(HttpStatus.OK).body(bookService.updateBook(existingBook));
@@ -128,9 +131,9 @@ public class BookController {
             @ApiResponse(responseCode = "500", description = "Internal Server error")
     })
     @DeleteMapping(value = "/books/deleteBook/{bookId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> deleteBook(@PathVariable(value ="bookId") Integer bookId) {
+    public ResponseEntity<Object> deleteBook(@PathVariable(value = "bookId") Integer bookId) {
         Optional<Book> bookToDeleteOptional = bookService.getOneBook(bookId);
-        if(bookToDeleteOptional.isEmpty()){
+        if (bookToDeleteOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Book not found.");
         }
         bookService.deleteBook(bookToDeleteOptional.get());

@@ -28,15 +28,15 @@ public class PersonService {
             throw new DuplicateEntityException("This person already exists.");
         }
         person.setIsBorrowing(false);
-        //person.setPassword(new BCryptPasswordEncoder().encode(person.getPassword()));
+        // person.setPassword(new BCryptPasswordEncoder().encode(person.getPassword()));
 
-        if(person.getIsAdmin()){
+        if (person.getIsAdmin()) {
             Set<String> roles = new HashSet<>();
             roles.add("USER");
             roles.add("ADMIN");
             person.setIsAdmin(true);
             person.setRoles(roles);
-        }else{
+        } else {
             Set<String> roles = new HashSet<>();
             roles.add("USER");
             person.setIsBorrowing(false);
@@ -60,7 +60,7 @@ public class PersonService {
 
     public void deletePerson(Person person) {
         boolean personO = person.getIsBorrowing();
-        if(personO){
+        if (personO) {
             throw new PersonHasBooksBorrowedException("Cannot delete person because it has books borrowed.");
         }
         personRepository.delete(person);
